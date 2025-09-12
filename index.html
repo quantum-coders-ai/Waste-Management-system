@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sortify - Waste Management Dashboard</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Custom Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-gray-100 p-8">
+    <div class="max-w-6xl mx-auto bg-white rounded-2xl shadow-xl p-8">
+        <header class="mb-8 border-b-2 pb-4 flex items-center justify-between">
+            <div>
+                <h1 class="text-4xl font-extrabold text-gray-800">Smart Waste Dashboard</h1>
+                <p class="text-gray-500 mt-2">Real-time monitoring and analytics for automated waste sorting.</p>
+            </div>
+            <div class="flex items-center space-x-4">
+                <!-- Conveyor Belt Control Button -->
+                <button id="conveyor-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-full shadow-lg transition duration-300 transform hover:scale-105">
+                    START CONVEYOR
+                </button>
+                <!-- Emergency Stop Button -->
+                <button id="emergency-stop-btn" class="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-full shadow-lg transition duration-300 transform hover:scale-105">
+                    EMERGENCY STOP
+                </button>
+            </div>
+        </header>
+        
+        <!-- Main Dashboard Section -->
+        <div id="main-dashboard-view">
+            <!-- Total Waste Counter in its own section -->
+            <section class="mb-8">
+                <div class="bg-purple-50 rounded-xl p-6 shadow-md border-l-4 border-purple-500 flex items-center justify-between">
+                    <div>
+                        <h2 class="text-xl font-semibold text-purple-800">Total Waste</h2>
+                        <p class="text-sm text-purple-600 mt-2">items processed in total</p>
+                    </div>
+                    <p id="total-counter" class="text-6xl font-bold text-purple-900">0</p>
+                </div>
+            </section>
+
+            <section class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                <!-- Recycled Counter -->
+                <div id="recycled-card" class="bg-emerald-50 rounded-xl p-6 shadow-md border-l-4 border-emerald-500 cursor-pointer hover:shadow-lg transition-shadow duration-300">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-xl font-semibold text-emerald-800">Recycled Waste</h2>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-8 h-8 text-emerald-500">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m5.23 6.488L14.5 12.25l-2.012-2.013M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                        </svg>
+                    </div>
+                    <p id="recycled-counter" class="text-5xl font-bold text-emerald-900">0</p>
+                    <p class="text-sm text-emerald-600 mt-2">items successfully recycled</p>
+                </div>
+
+                <!-- Dumped Counter -->
+                <div id="dumped-card" class="bg-red-50 rounded-xl p-6 shadow-md border-l-4 border-red-500 cursor-pointer hover:shadow-lg transition-shadow duration-300">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-xl font-semibold text-red-800">Non-Recyclable Waste</h2>
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-8 h-8 text-red-500">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9.53a5.558 5.558 0 0 1 1.096-.289 2.058 2.058 0 0 0 2.222 2.222c.159.26.159.458 0 .717-.26.159-.458.159-.717 0a.294.294 0 0 1-.222-.222l-.289-1.096zM15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 21.75a9.75 9.75 0 1 0 0-19.5 9.75 9.75 0 0 0 0 19.5z" />
+                        </svg>
+                    </div>
+                    <p id="dumped-counter" class="text-5xl font-bold text-red-900">0</p>
+                    <p class="text-sm text-red-600 mt-2">items sent to landfill</p>
+                </div>
+                
+                <!-- Live Feed & Status -->
+                <div class="bg-blue-50 rounded-xl p-6 shadow-md border-l-4 border-blue-500 flex flex-col justify-between">
+                    <div class="flex items-center justify-between mb-4">
+                        <h2 class="text-xl font-semibold text-blue-800">System Status</h2>
+                        <span id="status-light" class="w-6 h-6 rounded-full bg-gray-400"></span>
+                    </div>
+                    <div class="flex-grow flex items-center justify-center">
+                        <div id="live-feed" class="text-2xl font-bold text-blue-900 text-center">
+                            <p class="text-sm text-blue-600 mb-1">Current Item:</p>
+                            <p id="current-item" class="text-4xl text-blue-900 font-extrabold">-</p>
+                        </div>
+                    </div>
+                    <p class="text-sm text-blue-600 mt-4" id="system-status-text">System is offline</p>
+                </div>
+            </section>
+            
+            <!-- Sensor Checkpoint System -->
+            <section class="mb-8">
+                <h2 class="text-2xl font-bold text-gray-800 mb-4">Conveyor Belt Checkpoints</h2>
+                <div class="grid grid-cols-1 md:grid-cols-5 gap-4 p-4 bg-gray-800 rounded-xl shadow-inner">
+                    <!-- Sensor Stages -->
+                    <div id="sensor-stage-0" class="bg-gray-700 text-white rounded-lg p-4 text-center">
+                        <h3 class="font-bold">Sensor 1</h3>
+                        <p class="text-sm text-gray-300 mb-2">Detects: Organic</p>
+                        <div class="sensor-light w-8 h-8 mx-auto rounded-full bg-gray-500"></div>
+                    </div>
+                    <div id="sensor-stage-1" class="bg-gray-700 text-white rounded-lg p-4 text-center">
+                        <h3 class="font-bold">Sensor 2</h3>
+                        <p class="text-sm text-gray-300 mb-2">Detects: Plastic</p>
+                        <div class="sensor-light w-8 h-8 mx-auto rounded-full bg-gray-500"></div>
+                    </div>
+                    <div id="sensor-stage-2" class="bg-gray-700 text-white rounded-lg p-4 text-center">
+                        <h3 class="font-bold">Sensor 3</h3>
+                        <p class="text-sm text-gray-300 mb-2">Detects: Paper</p>
+                        <div class="sensor-light w-8 h-8 mx-auto rounded-full bg-gray-500"></div>
+                    </div>
+                    <div id="sensor-stage-3" class="bg-gray-700 text-white rounded-lg p-4 text-center">
+                        <h3 class="font-bold">Sensor 4</h3>
+                        <p class="text-sm text-gray-300 mb-2">Detects: Metal</p>
+                        <div class="sensor-light w-8 h-8 mx-auto rounded-full bg-gray-500"></div>
+                    </div>
+                    <!-- Manual Inspection Stage -->
+                    <div id="manual-inspection-stage" class="bg-gray-700 text-white rounded-lg p-4 text-center border-2 border-dashed border-yellow-400">
+                        <h3 class="font-bold">End of Line</h3>
+                        <p class="text-sm text-yellow-300 mb-2">Manual Inspection</p>
+                        <div class="sensor-light w-8 h-8 mx-auto rounded-full bg-gray-500"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Sorting Log -->
+            <section>
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-2xl font-bold text-gray-800">All Processed Waste</h2>
+                    <button id="clear-log-btn" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-full text-sm transition duration-300">
+                        Clear Log
+                    </button>
+                </div>
+                <div class="bg-gray-50 rounded-xl p-6 shadow-inner overflow-y-auto h-96">
+                    <ul id="log-list" class="space-y-2">
+                        <!-- Log entries will be added here by JavaScript -->
+                    </ul>
+                </div>
+            </section>
+        </div>
+
+        <!-- Detailed View Section -->
+        <div id="detailed-view" class="hidden">
+            <header class="mb-8 border-b-2 pb-4 flex items-center justify-between">
+                <button id="back-btn" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-full transition duration-300 transform hover:scale-105">
+                    ← Back
+                </button>
+                <h1 id="page-title" class="text-3xl font-extrabold text-gray-800">Waste Breakdown</h1>
+            </header>
+            <section id="breakdown-list" class="space-y-4">
+                <!-- Breakdown items will be dynamically inserted here -->
+            </section>
+        </div>
+    </div>
+    <!-- Main Script -->
+    <script type="module" src="script.js"></script>
+</body>
+</html>
