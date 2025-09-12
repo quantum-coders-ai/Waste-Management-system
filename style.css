@@ -1,0 +1,7 @@
+body {
+    font-family: "Inter", sans-serif;
+}
+
+.sensor-light {
+    transition: background-color 0.3s ease-in-out;
+}
