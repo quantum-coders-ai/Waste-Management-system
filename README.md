@@ -1,71 +1,134 @@
-# Waste-Management-system
-Smart Waste Sorting Simulation
+Smart Waste Sorting Dashboard
+1. Project Overview
+Sortify is a full-stack web application that simulates a modern, automated waste sorting facility. It features an interactive dashboard that visualizes the process of waste items moving along a conveyor belt, being identified by a series of specialized sensors, and sorted into different processing streams in real-time.
 
-This project is a Python-based simulation of an automated, multi-stage waste sorting system. It models a conveyor belt where items of different materials are identified by a series of sensors and sorted into appropriate bins. This script is the backend logic for the "Sortify - Smart Waste Dashboard" project.
+The project combines a Python-based simulation logic for the backend with a dynamic frontend built using HTML, CSS, and JavaScript. All data from the simulation is stored and retrieved in real-time from a Google Firebase (Firestore) database, providing a persistent and interactive user experience.
 
-Features
+2. Key Features
+Interactive Web Dashboard: A user-friendly interface to start, stop, and monitor the sorting process.
 
-Realistic Simulation: Simulates different types of waste materials: organic, plastic, paper, and metal.
+Realistic Simulation: The system simulates various material types (organic, plastic, paper, metal) and includes a probability for "unknown" items to mimic real-world scenarios.
 
-Unknown Items: Includes a chance for an "unknown" material to appear, simulating real-world scenarios where an item might not be identifiable by sensors.
+Multi-Stage Sensor Checkpoints: A sequential sorting system where each sensor is specialized for one type of material, providing a clear visualization of the sorting workflow.
 
-Multi-Stage Checkpoint System: Items pass through a series of specialized sensors, each designed to detect a single type of material.
+Real-time Database Integration: Utilizes Google Firestore to log every sorting action. The dashboard reflects database changes instantly without needing a refresh.
 
-Console Logging: Provides a detailed, real-time log of the sorting process for each item directly in the terminal.
+Data Analytics: The dashboard displays live counts of total, recycled, and non-recyclable items processed.
 
-Graceful Shutdown: The simulation can be stopped at any time using Ctrl+C, and it will display a summary of the total items processed.
+Detailed Breakdown: Users can click on the counter cards to see a detailed breakdown of the items within each category (e.g., how many plastic vs. paper items were recycled).
 
-How It Works
+3. Technologies Used
+This project integrates several technologies to create a full-stack experience:
 
-The simulation operates in a continuous loop, with each iteration representing a new item on the conveyor belt:
+Backend (Simulation Logic):
 
-Item Generation: A new item is simulated with a specific material type (e.g., plastic). There is a 90% chance it's a known material and a 10% chance it's "unknown."
+Python 3.x: Used for the core backend simulation logic in the main.py file, which serves as the conceptual foundation for the system.
 
-Sensor Detection: The item's simulated IR signature is read.
+Frontend (Dashboard & Interaction):
 
-Sequential Sorting: The item passes through a series of sensor stages:
+HTML5: Structures the web dashboard.
 
-Stage 1: Organic Sensor
+Tailwind CSS: A utility-first CSS framework for rapidly building a modern and responsive user interface.
 
-Stage 2: Plastic Sensor
+JavaScript (ES6+): Powers the client-side simulation logic, DOM manipulation, and communication with the database.
 
-Stage 3: Paper Sensor
+Database:
 
-Stage 4: Metal Sensor
+Google Firebase (Firestore): A cloud-based NoSQL database used for real-time data storage and synchronization, allowing the dashboard to update instantly as new data is generated.
 
-Sorting Action: If a sensor detects a material that matches its target, a message is printed indicating that the item has been successfully sorted, and the simulation moves on to the next item.
+4. System Architecture & Step-by-Step Workflow
+The application follows a clear, event-driven workflow from user interaction to data persistence.
 
-Manual Inspection: If an item passes through all sensor stages without being sorted (e.g., an "unknown" item), it is sent to the end of the line for manual inspection.
+Initialization:
 
-How to Run
+When the index.html page loads, script.js initializes a connection to the Firebase project.
+
+The script authenticates the user (anonymously in this case) and sets up a real-time listener (onSnapshot) on the waste_log collection in Firestore.
+
+Starting the Simulation:
+
+The user clicks the "START CONVEYOR" button.
+
+This action triggers the toggleConveyor() function, which starts a JavaScript interval (setInterval).
+
+Item Generation & Processing:
+
+At each interval, the runSortingSimulation() function is called.
+
+A new virtual waste item is generated with a random material type using the simulateIrSensor() logic.
+
+The UI updates to show the name of the "Current Item" being processed.
+
+Visual Sorting on Conveyor Belt:
+
+The item visually "travels" through the sensor checkpoints on the dashboard.
+
+As the item reaches each sensor, the sensor's light on the UI pulses (updateSensorUI).
+
+If the item's material matches the sensor's target (e.g., a "Plastic" item at the "Plastic Sensor"), the sorting is successful.
+
+Database Transaction:
+
+Once an item is sorted (or passes all sensors as "unknown"), the saveWasteData() function is called.
+
+A new document is created in the Firestore waste_log collection, containing the item's material, category (recycled/dumped), destination, and a server timestamp.
+
+Real-time Dashboard Update:
+
+The onSnapshot listener, which has been active since the page loaded, detects the new document in the database instantly.
+
+The listener's callback function re-reads the entire collection, recalculates the totals for recycled and dumped waste, and updates the counters and log on the dashboard. This ensures the UI is always a perfect reflection of the database state.
+
+Stopping the Simulation:
+
+The user can click "STOP CONVEYOR" or "EMERGENCY STOP" to clear the simulation interval and pause the process.
+
+5. Potential Use Cases & Applications
+This project, while a simulation, serves as a powerful prototype and educational tool with several real-world applications:
+
+Educational Tool: An excellent resource for teaching students about automation, IoT (Internet of Things) sensor systems, real-time databases, and full-stack web development.
+
+Industrial Prototyping: Can be used as a digital twin or a proof-of-concept for designing and validating the logic of a physical waste sorting facility before investing in expensive hardware.
+
+Operator Training: A safe, virtual environment for training new employees on how to monitor and manage an automated sorting plant.
+
+Data Generation: The simulation can be run to generate large, structured datasets that could be used to train machine learning models for more advanced waste detection and classification.
+
+6. Project Setup & Installation
+To run this project on your local machine, follow these steps:
 
 Prerequisites
+A modern web browser (e.g., Chrome, Firefox).
 
-Python 3.x
+A Google Firebase account (a free "Spark" plan is sufficient).
 
-Execution
+Setup Instructions
+Set up Firebase:
 
-Save the code as main.py.
+Go to the Firebase Console.
 
-Open your terminal or command prompt.
+Create a new project.
 
-Navigate to the directory where you saved the file.
+Create a new Firestore Database in your project.
 
-Run the script using the following command:
+In your Project Settings, add a new Web App.
 
-python main.py
+Firebase will provide you with a firebaseConfig object. Copy this object.
 
+Configure script.js:
 
-The simulation will start and print the status of each item to the console.
+Note: In the original project environment, the configuration is injected automatically. For local setup, you must add it manually.
 
-To stop the simulation, press Ctrl+C.
+Open the script.js file.
 
-Code Overview
+At the top of the initializeFirebase function, you will see a line for firebaseConfig. Paste your copied configuration object here.
 
-IR_SIGNATURES: A dictionary that maps material types to their simulated infrared signature values.
+You can leave __app_id and __initial_auth_token as they are for local testing.
 
-simulate_ir_sensor(): This function randomly selects a material to simulate a new item appearing on the conveyor belt.
+Run the Application:
 
-get_material_from_signature(): Translates a given IR signature back into its corresponding material name.
+Place the index.html, style.css, and script.js files in the same directory.
 
-main(): The core function that contains the main loop, controls the flow of the simulation, and prints the operational log.
+Open the index.html file in your web browser.
+
+The dashboard should load, and you can now start the simulation. All data will be saved to your Firebase project.
