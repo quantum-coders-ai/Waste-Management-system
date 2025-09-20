@@ -1,134 +1,123 @@
-Smart Waste Sorting Dashboard
+Waste Sorting System & Performance Analytics Dashboard
+This project is a high-fidelity web dashboard that simulates a modern, automated waste sorting facility. It provides a real-time visualization of the sorting process, detailed performance analytics, and a suite of controls to test the system under various conditions.
+
 1. Project Overview
-Sortify is a full-stack web application that simulates a modern, automated waste sorting facility. It features an interactive dashboard that visualizes the process of waste items moving along a conveyor belt, being identified by a series of specialized sensors, and sorted into different processing streams in real-time.
+The effective management of municipal solid waste is a critical global challenge. This project addresses the inefficiencies of manual sorting by demonstrating a modern, automated solution. It simulates a waste sorting station that uses a mock Machine Learning model to classify items into different categories (e.g., Plastic, Metal, Paper, E-Waste).
 
-The project combines a Python-based simulation logic for the backend with a dynamic frontend built using HTML, CSS, and JavaScript. All data from the simulation is stored and retrieved in real-time from a Google Firebase (Firestore) database, providing a persistent and interactive user experience.
+The core of the project is a sophisticated analytics dashboard that provides stakeholders with immediate, data-driven insights into the system's performance, enabling optimization of recycling processes. The entire application is built with modern web technologies and features a robust dual-mode architecture.
 
-2. Key Features
-Interactive Web Dashboard: A user-friendly interface to start, stop, and monitor the sorting process.
+2. Core Features
+This dashboard is packed with features designed for comprehensive simulation and analysis:
 
-Realistic Simulation: The system simulates various material types (organic, plastic, paper, metal) and includes a probability for "unknown" items to mimic real-world scenarios.
+Dual Online/Offline Architecture:
 
-Multi-Stage Sensor Checkpoints: A sequential sorting system where each sensor is specialized for one type of material, providing a clear visualization of the sorting workflow.
+Offline-First: The application is fully functional without an internet connection. All data is saved to the browser's localStorage, ensuring data persistence across sessions.
 
-Real-time Database Integration: Utilizes Google Firestore to log every sorting action. The dashboard reflects database changes instantly without needing a refresh.
+Live Online Mode: When an internet connection is available, it automatically connects to a Firebase Firestore database to log and sync all processed data in real-time.
 
-Data Analytics: The dashboard displays live counts of total, recycled, and non-recyclable items processed.
+Advanced Real-time Simulation:
 
-Detailed Breakdown: Users can click on the counter cards to see a detailed breakdown of the items within each category (e.g., how many plastic vs. paper items were recycled).
+A dynamic "Sorting Station" visualizes the process, showing items being scanned and sorted into their respective bins.
 
-3. Technologies Used
-This project integrates several technologies to create a full-stack experience:
+The simulation generates a shuffled deck of 8 different waste categories to ensure variety.
 
-Backend (Simulation Logic):
+Advanced Simulation Controls:
 
-Python 3.x: Used for the core backend simulation logic in the main.py file, which serves as the conceptual foundation for the system.
+Simulation Speed: A slider allows you to control the item processing speed from 0.5x (Slow) to 3.0x (Very Fast) to analyze throughput.
 
-Frontend (Dashboard & Interaction):
+Variable ML Fault Rate: A toggle activates a fault simulation mode with a slider to control the ML model's error rate from 0% to 100%, allowing for detailed resilience testing.
 
-HTML5: Structures the web dashboard.
+Comprehensive Analytics Dashboard:
 
-Tailwind CSS: A utility-first CSS framework for rapidly building a modern and responsive user interface.
+Key Performance Indicators (KPIs): Real-time stats for Total Items Processed, Sorting Accuracy, and Throughput (items/min).
 
-JavaScript (ES6+): Powers the client-side simulation logic, DOM manipulation, and communication with the database.
+Interactive Charts: All charts are dynamically updated to reflect the current data filter.
 
-Database:
+Processing Trend: A line chart showing the number of items processed over time.
 
-Google Firebase (Firestore): A cloud-based NoSQL database used for real-time data storage and synchronization, allowing the dashboard to update instantly as new data is generated.
+Waste Categories: A doughnut chart showing the breakdown of all sorted materials.
 
-4. System Architecture & Step-by-Step Workflow
-The application follows a clear, event-driven workflow from user interaction to data persistence.
+Recycled vs. Dumped: A pie chart providing a clear proportion of recyclable vs. non-recyclable items.
 
-Initialization:
+Time-Based Filtering: All analytics can be filtered to show data for the "Last 5 Min," "Last 30 Min," "Last 1 Hr," "Last 24 Hr," or "All Time."
 
-When the index.html page loads, script.js initializes a connection to the Firebase project.
+Robust and User-Friendly Interface:
 
-The script authenticates the user (anonymously in this case) and sets up a real-time listener (onSnapshot) on the waste_log collection in Firestore.
+Day/Night Theme: The dashboard automatically detects the user's system preference and allows manual toggling between light and dark modes.
 
-Starting the Simulation:
+Detailed Event Log: A live log shows every item processed. Clicking an entry opens a modal with detailed inspection data (actual vs. predicted, confidence, timestamp).
 
-The user clicks the "START CONVEYOR" button.
+Self-Healing Offline Mode: The application can detect and clear corrupted local data to prevent crashes.
 
-This action triggers the toggleConveyor() function, which starts a JavaScript interval (setInterval).
+3. Technology Stack
+The project is built entirely with client-side technologies, making it highly portable and easy to deploy.
 
-Item Generation & Processing:
+Frontend: HTML5, Tailwind CSS
 
-At each interval, the runSortingSimulation() function is called.
+Core Logic: JavaScript (ES6 Modules)
 
-A new virtual waste item is generated with a random material type using the simulateIrSensor() logic.
+Data Visualization: Chart.js
 
-The UI updates to show the name of the "Current Item" being processed.
+Backend & Database (Online Mode): Google Firebase (Firestore for database and Anonymous Auth for security)
 
-Visual Sorting on Conveyor Belt:
+4. System Architecture
+The application follows a modern, modular JavaScript architecture, separating concerns for better maintainability.
 
-The item visually "travels" through the sensor checkpoints on the dashboard.
+index.html: The main entry point and structure of the application.
 
-As the item reaches each sensor, the sensor's light on the UI pulses (updateSensorUI).
+style.css: Contains all custom styling rules.
 
-If the item's material matches the sensor's target (e.g., a "Plastic" item at the "Plastic Sensor"), the sorting is successful.
+firebase.js: Handles all communication with the Firebase backend.
 
-Database Transaction:
+ui.js: Manages all DOM elements, charts, animations, and visual updates.
 
-Once an item is sorted (or passes all sensors as "unknown"), the saveWasteData() function is called.
+simulation.js: Contains the core logic for the waste sorting simulation.
 
-A new document is created in the Firestore waste_log collection, containing the item's material, category (recycled/dumped), destination, and a server timestamp.
+main.js: The central controller that initializes the app and connects all modules.
 
-Real-time Dashboard Update:
+5. Getting Started
+To run the project locally, you will need a local web server, as the application uses ES6 modules.
 
-The onSnapshot listener, which has been active since the page loaded, detects the new document in the database instantly.
+Clone the Repository (or download the files):
 
-The listener's callback function re-reads the entire collection, recalculates the totals for recycled and dumped waste, and updates the counters and log on the dashboard. This ensures the UI is always a perfect reflection of the database state.
+git clone [https://github.com/your-username/waste-sorting-dashboard.git](https://github.com/your-username/waste-sorting-dashboard.git)
 
-Stopping the Simulation:
+Firebase Configuration:
 
-The user can click "STOP CONVEYOR" or "EMERGENCY STOP" to clear the simulation interval and pause the process.
+Open the firebase.js file.
 
-5. Potential Use Cases & Applications
-This project, while a simulation, serves as a powerful prototype and educational tool with several real-world applications:
+Replace the placeholder firebaseConfig object with your own Firebase project configuration.
 
-Educational Tool: An excellent resource for teaching students about automation, IoT (Internet of Things) sensor systems, real-time databases, and full-stack web development.
+Ensure that Firestore and Anonymous Authentication are enabled in your Firebase project.
 
-Industrial Prototyping: Can be used as a digital twin or a proof-of-concept for designing and validating the logic of a physical waste sorting facility before investing in expensive hardware.
+Run a Local Server:
 
-Operator Training: A safe, virtual environment for training new employees on how to monitor and manage an automated sorting plant.
+Navigate to the project directory in your terminal.
 
-Data Generation: The simulation can be run to generate large, structured datasets that could be used to train machine learning models for more advanced waste detection and classification.
+If you have Python 3, run: python -m http.server
 
-6. Project Setup & Installation
-To run this project on your local machine, follow these steps:
+Open your browser and go to http://localhost:8000.
 
-Prerequisites
-A modern web browser (e.g., Chrome, Firefox).
+6. Project Uses & Scope
+This project serves as a powerful tool for various purposes:
 
-A Google Firebase account (a free "Spark" plan is sufficient).
+Educational Tool: To teach the principles of automated waste sorting and the importance of data analytics in process optimization.
 
-Setup Instructions
-Set up Firebase:
+Demonstration Platform: To showcase the capabilities of modern, AI-driven sorting facilities to stakeholders.
 
-Go to the Firebase Console.
+Analysis & Research: To simulate and analyze how variables like processing speed and error rates affect overall system efficiency.
 
-Create a new project.
+7. Future Updates & Changes
+The modular architecture of this project makes it easy to extend. The following are key areas for future development:
 
-Create a new Firestore Database in your project.
+Real Machine Learning Integration:
 
-In your Project Settings, add a new Web App.
+Replace the mock ML model with a real TensorFlow.js model that can perform live classification using a device's webcam or from uploaded images.
 
-Firebase will provide you with a firebaseConfig object. Copy this object.
+Hardware Connectivity:
 
-Configure script.js:
+Integrate the web dashboard with a physical prototype using a Raspberry Pi to control sensors, conveyor belts, and sorting mechanisms.
 
-Note: In the original project environment, the configuration is injected automatically. For local setup, you must add it manually.
+Advanced Analytics & Reporting:
 
-Open the script.js file.
-
-At the top of the initializeFirebase function, you will see a line for firebaseConfig. Paste your copied configuration object here.
-
-You can leave __app_id and __initial_auth_token as they are for local testing.
-
-Run the Application:
-
-Place the index.html, style.css, and script.js files in the same directory.
-
-Open the index.html file in your web browser.
-
-The dashboard should load, and you can now start the simulation. All data will be saved to your Firebase project.
+Implement a feature to export the currently filtered data as a CSV file, allowing for in-depth offline analysis and record-keeping.
