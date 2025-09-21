@@ -80,7 +80,7 @@ To run the project locally, you will need a local web server, as the application
 
 Clone the Repository (or download the files):
 
-git clone [https://github.com/Sahil2430/Waste-Sorting-System-and-Performance-Analytics-Dashboard.git](https://github.com/quantum-coders-ai/Waste-Management-system.git)
+git clone [https://github.com/quantum-coders-ai/Waste-Management-system.git]
 
 
 Firebase Configuration:
@@ -129,3 +129,4 @@ Advanced Analytics & Reporting:
 
 
 Implement a feature to export the currently filtered data as a CSV file, allowing for in-depth offline analysis and record-keeping in tools like Excel or Google Sheets.
+
